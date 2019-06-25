@@ -130,3 +130,27 @@ class World:
         plt.axis("equal")
         plt.axis("off")
         plt.show()
+
+    def get_nrows(self):
+
+        return self.nRows
+
+    def get_ncols(self):
+
+        return self.nCols
+
+    def get_stateobstacles(self):
+
+        return self.stateObstacles
+
+    def get_stateterminals(self):
+
+        return self.stateTerminals
+
+    def get_nstates(self):
+
+        return self.nStates
+
+    def get_nactions(self):
+
+        return self.nActions
