@@ -1,6 +1,7 @@
 from World import World
 import numpy as np
 import pandas as pd
+import copy
 
 
 def part_a(world, p=0.8):
@@ -76,34 +77,38 @@ def part_a(world, p=0.8):
     return transition_models, rewards
 
 
-def max_action(transition_models, rewards, gamma, s, V, actions):
+def max_action(transition_models, rewards, gamma, s, V, actions, terminal_ind):
 
     maxs = {key: 0 for key in actions}
     max_a = ""
+    action_map = {k: v for k, v in zip(actions, [1, 3, 2, 4])}
     for action in actions:
-        for s_p, p in enumerate(transition_models[action].loc[1, :]):
-            maxs[action] += rewards[s - 1] + gamma * p * V[s_p][0]
+        if s not in terminal_ind:
+            maxs[action] += rewards[s - 1] + gamma * np.dot(transition_models[action].loc[s, :].values, V)
+        else:
+            maxs[action] = rewards[s - 1]
     maxi = -10 ** 10
     for key in maxs:
         if maxs[key] > maxi:
             max_a = key
             maxi = maxs[key]
-    return maxi, max_a
+    return maxi, action_map[max_a]
 
 
 def part_b(world, transition_models, rewards, gamma=1, theta=10 ** -4):
 
     nstates = world.get_nstates()
-    V = np.zeros((nstates, 1))
-    P = {}
+    terminal_ind = world.get_stateterminals()
+    V = np.zeros((nstates, ))
+    P = np.zeros((nstates, 1))
     actions = ["N", "S", "E", "W"]
     delta = theta + 1
     while delta > theta:
         delta = 0
+        v = copy.deepcopy(V)
         for s in range(1, nstates + 1):
-            v = V[s - 1][0]
-            V[s - 1], P[s] = max_action(transition_models, rewards, gamma, s, V, actions)
-            delta = max(delta, np.abs(v - V[s - 1]))
+            V[s - 1], P[s - 1] = max_action(transition_models, rewards, gamma, s, v, actions, terminal_ind)
+            delta = max(delta, np.abs(v[s - 1] - V[s - 1]))
     return V, P
 
 
@@ -115,5 +120,8 @@ if __name__ == "__main__":
     # world.plot_policy(np.random.randint(1, world.nActions,(world.nStates, 1)))
     # part a
     transition_models, rewards = part_a(world)
-    part_b(world, transition_models, rewards)
+    # part b
+    V, P = part_b(world, transition_models, rewards)
+    world.plot_value(V)
+    world.plot_policy(P)
 

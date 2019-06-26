@@ -97,6 +97,7 @@ class World:
         nCols = self.nCols
         stateObstacles = self.stateObstacles
         stateTerminals = self.stateTerminals
+        policy = policy.reshape(nRows, nCols, order="F").reshape(-1, 1)
         X, Y = np.meshgrid(range(nCols + 1), range(nRows + 1))
         X1 = X[:-1, :-1]
         Y1 = Y[:-1, :-1]
