@@ -4,14 +4,14 @@ import pandas as pd
 import copy
 
 
-def part_a(world, p=0.8):
+def construct_p(world, p=0.8, step=-0.04):
 
     nstates = world.get_nstates()
     nrows = world.get_nrows()
     obsacle_index = world.get_stateobstacles()
     terminal_index = world.get_stateterminals()
     bad_index = obsacle_index + terminal_index
-    rewards = np.array([-0.04] * 4 + [0] + [-0.04] * 4 + [1, -1] + [-0.04])
+    rewards = np.array([step] * 4 + [0] + [step] * 4 + [1, -1] + [step])
     actions = ["N", "S", "E", "W"]
     transition_models = {}
     for action in actions:
@@ -95,7 +95,7 @@ def max_action(transition_models, rewards, gamma, s, V, actions, terminal_ind):
     return maxi, action_map[max_a]
 
 
-def part_b(world, transition_models, rewards, gamma=1, theta=10 ** -4):
+def value_iteration(world, transition_models, rewards, gamma=1, theta=10 ** -4):
 
     nstates = world.get_nstates()
     terminal_ind = world.get_stateterminals()
@@ -119,9 +119,19 @@ if __name__ == "__main__":
     # world.plot_value([np.random.random() for i in range(12)])
     # world.plot_policy(np.random.randint(1, world.nActions,(world.nStates, 1)))
     # part a
-    transition_models, rewards = part_a(world)
+    transition_models, rewards = construct_p(world)
     # part b
-    V, P = part_b(world, transition_models, rewards)
+    transition_models, rewards = construct_p(world)
+    V, P = value_iteration(world, transition_models, rewards)
     world.plot_value(V)
     world.plot_policy(P)
-
+    # part c
+    transition_models, rewards = construct_p(world)
+    V, P = value_iteration(world, transition_models, rewards, gamma=0.9)
+    world.plot_value(V)
+    world.plot_policy(P)
+    # part d
+    transition_models, rewards = construct_p(world, step=-0.02)
+    V, P = value_iteration(world, transition_models, rewards)
+    world.plot_value(V)
+    world.plot_policy(P)
