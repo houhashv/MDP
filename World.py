@@ -65,7 +65,7 @@ class World:
         k = 0
         for i in range(nCols):
             for j in range(nRows, 0, -1):
-                plt.text(i + 0.5, j - 0.5, str(states[k]), fontsize=26, horizontalalignment='center', verticalalignment='center')
+                plt.text(i + 0.5, j - 0.5, str(states[k]), fontsize=20, horizontalalignment='center', verticalalignment='center')
                 k += 1
         plt.title('MDP gridworld', size=16)
         plt.axis("equal")
@@ -82,7 +82,7 @@ class World:
         for i in range(nCols):
             for j in range(nRows, 0, -1):
                 if k + 1 not in stateObstacles:
-                    plt.text(i + 0.5, j - 0.5, str(self._truncate(valueFunction[k], 3)), fontsize=26, horizontalalignment='center', verticalalignment='center')
+                    plt.text(i + 0.5, j - 0.5, str(self._truncate(valueFunction[k], 3)), fontsize=20, horizontalalignment='center', verticalalignment='center')
                 k += 1
         plt.title('MDP gridworld', size=16)
         plt.axis("equal")
