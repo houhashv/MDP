@@ -142,6 +142,7 @@ def policy_iter(policy, world, transition_models, rewards, gamma=0.9, theta=10 *
             break
     return np.array(V)
 
+
 #  Helper function to calculate the value for all action in a given state
 def lookfoword(s, V, transition_models, rewards, gamma = 0.9):
 
@@ -217,3 +218,4 @@ if __name__ == "__main__":
     V, P = policy_improvement(world, transition_models, rewards, gamma=0.9)
     world.plot_value(V)
     world.plot_policy(P)
+
