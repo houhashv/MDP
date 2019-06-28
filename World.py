@@ -15,6 +15,7 @@ class World:
 
     def _plot_world(self):
 
+        nStates = self.nStates
         nRows = self.nRows
         nCols = self.nCols
         stateObstacles = self.stateObstacles
