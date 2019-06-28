@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from World import World
 import numpy as np
 import pandas as pd
@@ -97,7 +95,7 @@ def max_action(transition_models, rewards, gamma, s, V, actions, terminal_ind):
     return maxi, action_map[max_a]
 
 
-def value_iteration(world, transition_models, rewards, gamma=1, theta=10 ** -4):
+def value_iteration(world, transition_models, rewards, gamma=1.0, theta=10 ** -4):
 
     nstates = world.get_nstates()
     terminal_ind = world.get_stateterminals()
@@ -109,10 +107,10 @@ def value_iteration(world, transition_models, rewards, gamma=1, theta=10 ** -4):
         delta = 0
         v = copy.deepcopy(V)
         for s in range(1, nstates + 1):
-            P[s-1], V[s - 1] = max_action(transition_models, rewards, gamma, s, v, actions, terminal_ind)
+            V[s - 1], P[s - 1] = max_action(transition_models, rewards, gamma, s, v, actions, terminal_ind)
             delta = max(delta, np.abs(v[s - 1] - V[s - 1]))
     return V, P
-        
+
 
 def policy_iter(policy, world, transition_models, rewards, gamma=0.9, theta=10 ** -4):
 
@@ -167,7 +165,7 @@ def policy_improvement(world, transition_models, rewards, gamma= 0.9):
 
     # Start with a uniform policy
     policy = np.ones((nstates, nActions)) / nActions
-    
+
     while True:
         # Evaluate the current policy
         V = policy_iter(policy, world, transition_models, rewards, gamma)
@@ -190,6 +188,7 @@ def policy_improvement(world, transition_models, rewards, gamma= 0.9):
         if policy_stable:
             return V, policy
 
+
 if __name__ == "__main__":
 
     world = World()
@@ -197,7 +196,7 @@ if __name__ == "__main__":
     # world.plot_value([np.random.random() for i in range(12)])
     # world.plot_policy(np.random.randint(1, world.nActions,(world.nStates, 1)))
     # part a
-    transition_models, rewards = construct_p(world)
+    # transition_models, rewards = construct_p(world)
     # part b
     transition_models, rewards = construct_p(world)
     V, P = value_iteration(world, transition_models, rewards)
@@ -214,8 +213,7 @@ if __name__ == "__main__":
     world.plot_value(V)
     world.plot_policy(P)
     # part e
-    transition_models, rewards = construct_p(world)
-    V, P = policy_improvement(world, transition_models, rewards, gamma=0.9)
-    world.plot_value(V)
-    world.plot_policy(P)
-
+    # transition_models, rewards = construct_p(world)
+    # V, P = policy_improvement(world, transition_models, rewards, gamma=0.9)
+    # world.plot_value(V)
+    # world.plot_policy(P)
